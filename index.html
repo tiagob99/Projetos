@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Locais Proibidos</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+    <script
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCqek5Xla5SFQSbv3tzTjSfQqwYPupUIPg&callback=initMap&libraries=&v=weekly"
+      defer></script>
+   
+<style type="text/css">
+    /* Always set the map height explicitly to define the size of the div
+     * element that contains the map. */
+    #map {
+      height: 100%;
+    }
+
+    /* Optional: Makes the sample page fill the window. */
+    html,
+    body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+
+    .custom-map-control-button {
+      appearance: button;
+      background-color: #fff;
+      border: 0;
+      border-radius: 2px;
+      box-shadow: 0 1px 4px -1px rgba(0, 0, 0, 0.3);
+      cursor: pointer;
+      margin: 10px;
+      padding: 0 0.5em;
+      height: 40px;
+      font: 400 18px Roboto, Arial, sans-serif;
+      overflow: hidden;
+    }
+    .custom-map-control-button:hover {
+      background: #ebebeb;
+    }
+  </style>
+ 
+<script>
+
+    
+    // Note: This example requires that you consent to location sharing when
+    // prompted by your browser. If you see the error "The Geolocation service
+    // failed.", it means you probably did not give permission for the browser to
+    // locate you.
+    let map, infoWindow;
+
+    function initMap() {
+      map = new google.maps.Map(document.getElementById("map"), {
+        center: { lat: 32.821211, lng: -16.905392 },
+        zoom: 10,
+      });
+      //32.826433,-16.878962
+      const triangleCoords_SJ = [
+      
+      { lat: 32.832981, lng: -16.905392 },
+      { lat: 32.804244, lng: -16.860256 },
+      { lat: 32.821730, lng: -16.841982},
+      { lat:  32.851154, lng: -16.897147 },
+      ];
+     
+      const triangleCoords_C = [
+      { lat: 32.641717, lng:-16.831709 },
+      { lat: 32.646776, lng: -16.888857 },
+      { lat: 32.639577, lng: -16.890281 },
+      { lat: 32.635096, lng: -16.828672 },
+      ];
+      
+      const triangleCoords_CDL = [
+      { lat: 32.654725, lng: -17.018910 },
+      { lat: 32.645908, lng: -17.018566 },
+      { lat: 32.644521, lng: -17.007932 },
+      { lat: 32.647267, lng: -16.997969 },
+      { lat: 32.641485, lng: -16.981994 },
+      { lat: 32.650649, lng: -16.982326 },
+      { lat: 32.654140, lng: -16.997881 },
+      ];
+
+      const triangleCoords_PP = [
+      { lat: 32.801676, lng: -17.250803 },
+      { lat: 32.801315, lng: -17.272944 },
+      { lat: 32.814574, lng: -17.277462 },
+      { lat: 32.822321, lng: -17.292406 },
+      { lat: 32.830601, lng: -17.292777 },
+      { lat: 32.877035, lng: -17.209606 },
+      { lat: 32.858364, lng: -17.208747 },
+      ];
+     
+      const triangleCoords_PXO_D = [
+      { lat: 33.036255, lng: -16.360713 },
+      { lat: 33.029290, lng: -16.352287 },
+      { lat: 33.024094, lng: -16.357853 },
+      { lat: 33.019992, lng: -16.356994 },
+      { lat: 33.001638, lng: -16.360023 },
+      { lat: 32.986377, lng: -16.382354 },
+      { lat: 32.989832, lng: -16.396440 },
+      { lat: 33.018337, lng: -16.414992 },
+      { lat: 33.032866, lng: -16.392978 },
+      ];
+      const triangleCoords_PXO_ESTE = [
+      { lat: 33.064248, lng: -16.310267 },
+      { lat: 33.036644, lng: -16.310123 },
+      { lat: 33.035636, lng: -16.275481 },
+      { lat: 33.053594, lng: -16.269314 },
+      { lat: 33.076483, lng: -16.279026 },
+      { lat: 33.075907, lng: -16.295517 },
+      
+      ];
+
+      
+      
+      
+      // Construct the polygon.
+      const bermudaTriangle = new google.maps.Polygon({
+      paths: [triangleCoords_SJ , triangleCoords_C, triangleCoords_CDL, triangleCoords_PP, triangleCoords_PXO_D, triangleCoords_PXO_ESTE ],
+      strokeColor: "#FF0000",
+      strokeOpacity: 0.8,
+      strokeWeight: 2,
+      fillColor: "#FF0000",
+      fillOpacity: 0.25,
+  });
+    bermudaTriangle.setMap(map);
+      infoWindow = new google.maps.InfoWindow();
+      const locationButton = document.createElement("button");
+      locationButton.textContent = "Current Location";
+      locationButton.classList.add("custom-map-control-button");
+      map.controls[google.maps.ControlPosition.BOTTOM_RIGHT].push(
+        locationButton
+      );
+      locationButton.addEventListener("click", () => {
+        // Try HTML5 geolocation.
+        
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(
+            (position) => {
+              const pos = {
+                lat: position.coords.latitude,
+                lng: position.coords.longitude,
+              };
+              const positi = {
+                lat:33.023864,
+                lng: -16.371326,
+              }
+              new google.maps.Marker({
+                position: pos,
+                map,
+                title: "You're here!",
+              });
+              
+              map.setCenter(pos);
+             handleInside(triangleCoords_SJ, pos);
+             handleInside(triangleCoords_C, pos);
+             handleInside(triangleCoords_CDL, pos);
+             handleInside(triangleCoords_PP, pos);
+             handleInside(triangleCoords_PXO_D, pos);
+             handleInside(triangleCoords_PXO_ESTE, pos);
+            },
+            () => {
+              handleLocationError(true, infoWindow, map.getCenter());
+            }
+          );
+        } else {
+          // Browser doesn't support Geolocation
+          handleLocationError(false, infoWindow, map.getCenter());
+        }
+      });
+    }
+    function handleInside(tri, po){
+        primeiro_lat= tri[0].lat;
+        ultimo_lat = tri[0].lat;
+        primeiro_lon= tri[0].lng;
+        ultimo_lon = tri[0].lng;
+        for(i=1; i<tri.length; i++) {
+                  
+            if(primeiro_lat > tri[i].lat){
+              primeiro_lat = tri[i].lat;
+            }
+            if(ultimo_lat < tri[i].lat){
+                ultimo_lat = tri[i].lat;
+            }
+
+            if(primeiro_lon > tri[i].lng){
+                primeiro_lon = tri[i].lng;
+              }
+              if(ultimo_lon < tri[i].lng){
+                  ultimo_lon = tri[i].lng;
+              }
+        }
+         if(po.lat > primeiro_lat && po.lat < ultimo_lat && po.lng > primeiro_lon && po.lng < ultimo_lon){
+            alert ("ESTÁS DENTRO, SAI DAÍ ZÉ");
+        } 
+        
+        
+    }
+
+    function handleLocationError(browserHasGeolocation, infoWindow, pos) {
+      infoWindow.setPosition(pos);
+      infoWindow.setContent(
+        browserHasGeolocation
+          ? "Error: The Geolocation service failed."
+          : "Error: Your browser doesn't support geolocation."
+      );
+      infoWindow.open(map);
+    }
+    
+  </script>
+</head>
+<body>
+  <div id="map"></div>
+</body>
+<!-- The core Firebase JS SDK is always required and must be listed first -->
+<script src="/__/firebase/8.2.3/firebase-app.js"></script>
+
+<!-- TODO: Add SDKs for Firebase products that you want to use
+     https://firebase.google.com/docs/web/setup#available-libraries -->
+<script src="/__/firebase/8.2.3/firebase-analytics.js"></script>
+
+<!-- Initialize Firebase -->
+<script src="/__/firebase/init.js"></script>
+</html>
